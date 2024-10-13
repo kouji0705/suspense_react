@@ -15,7 +15,7 @@ let userDataPromise: Promise<User[]> | null = null;
 // ユーザーデータを取得する関数
 const getUserData = async (): Promise<User[]> => {
 	// データ取得がわかりやすいように2秒待つ
-	await new Promise((resolve) => setTimeout(resolve, 2000));
+	await new Promise((resolve) => setTimeout(resolve, 5000));
 	const res = await fetch("https://jsonplaceholder.typicode.com/users");
 	if (!res.ok) {
 		throw new Error("Failed to fetch data");
@@ -49,8 +49,16 @@ const _SuspendUser = () => {
 // メインのAppコンポーネント
 export const SuspendUser = () => {
 	return (
-		<Suspense fallback={<p>Loading...</p>}>
+		<Suspense fallback={<FallbackUI />}>
 			<_SuspendUser />
 		</Suspense>
+	);
+};
+
+export const FallbackUI = () => {
+	return (
+		<div>
+			<p>Loading...</p>
+		</div>
 	);
 };
