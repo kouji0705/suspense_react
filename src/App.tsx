@@ -1,7 +1,7 @@
-import SuspendWeather from "./ParentComponent";
+import { SuspendUser } from "./ParentComponent";
 
 function App() {
-	return <SuspendWeather />;
+	return <SuspendUser />;
 }
 
 export default App;

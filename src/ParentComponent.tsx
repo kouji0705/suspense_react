@@ -1,21 +1,30 @@
 import { Suspense } from "react";
 
-const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+// ユーザーの型定義
+type User = {
+	id: number;
+	name: string;
+	username: string;
+	email: string;
+};
 
 // キャッシュとしてグローバルにデータを保存するオブジェクト
-let userData: any | null = null;
-let userDataPromise: Promise<any> | null = null;
+let userData: User[] | null = null;
+let userDataPromise: Promise<User[]> | null = null;
 
 // ユーザーデータを取得する関数
-const getUserData = async (): Promise<any> => {
+const getUserData = async (): Promise<User[]> => {
 	// データ取得がわかりやすいように2秒待つ
-	await sleep(2000);
-	const res = await fetch(`https://jsonplaceholder.typicode.com/users`);
+	await new Promise((resolve) => setTimeout(resolve, 2000));
+	const res = await fetch("https://jsonplaceholder.typicode.com/users");
+	if (!res.ok) {
+		throw new Error("Failed to fetch data");
+	}
 	return res.json();
 };
 
 // SuspendUserコンポーネント
-const SuspendUser = () => {
+const _SuspendUser = () => {
 	// データがまだ取得されていなければ、データ取得を開始
 	if (!userDataPromise) {
 		userDataPromise = getUserData().then((data) => {
@@ -38,14 +47,10 @@ const SuspendUser = () => {
 };
 
 // メインのAppコンポーネント
-const App = () => {
+export const SuspendUser = () => {
 	return (
-		<>
-			<Suspense fallback={<p>Loading...</p>}>
-				<SuspendUser />
-			</Suspense>
-		</>
+		<Suspense fallback={<p>Loading...</p>}>
+			<_SuspendUser />
+		</Suspense>
 	);
 };
-
-export default App;
